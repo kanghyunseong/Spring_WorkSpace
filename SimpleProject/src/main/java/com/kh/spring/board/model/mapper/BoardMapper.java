@@ -2,9 +2,12 @@ package com.kh.spring.board.model.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.session.RowBounds;
 
+import com.kh.spring.api.model.dto.Comment;
 import com.kh.spring.board.model.dto.BoardDTO;
 import com.kh.spring.board.model.dto.ReplyDTO;
 
@@ -27,4 +30,22 @@ public interface BoardMapper {
 	BoardDTO findBoardAndReply(Long boardNo);
 	
 	int insertReply(ReplyDTO reply);
+	
+	@Insert("INSERT INTO FOOD_COMMENT VALUES(#{foodNo}, #{content}, SYSDATE)")
+	int saveComment(Comment comment);
+
+	@Select("""
+			SELECT
+			       SEQ foodNo
+			     , CONTENT
+			     , CREATE_DATE createDate
+			  FROM
+			       FOOD_COMMENT
+			 WHERE
+			       SEQ- #{seq}
+			 ORDER
+			    BY
+			       createDate DESC
+			""")
+	List<Comment> selectAll(Long seq);
 }
